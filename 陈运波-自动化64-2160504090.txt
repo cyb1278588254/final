@@ -1,0 +1,160 @@
+T1.m
+close all;clear all;clc;
+I=imread('test1.bmp');
+%I=imread('test2.png');
+%I=imread('test3.jpg');
+%I=imread('test4.bmp');
+%I=imread('test5.png');
+%I=imread('test6.jpg');
+I1=edge(I,'sobel');
+I2=edge(I,'log');
+I3=edge(I,'canny');
+figure;
+subplot 221;
+imshow(I);
+title('原始图像');
+subplot 222;
+imshow(I1);
+title('sobel边缘检测');
+subplot 223;
+imshow(I2);
+title('拉普拉斯边缘检测');
+subplot 224;
+imshow(I3);
+title('canny算子边缘检测');
+
+T2.m
+%比较不同边缘检测算法对直线检测的影响
+close all;clear all;clc;
+I=imread('test1.bmp');
+%I=imread('test2.png');
+%I=imread('test3.jpg');
+%I=imread('test4.bmp');
+%I=imread('test5.png');
+%I=imread('test6.jpg');
+I1=edge(I,'sobel');
+I2=edge(I,'log');
+I3=edge(I,'canny');
+[H,theta,rho]=hough(I1);%计算二值图像的标准hough变换
+peaks=houghpeaks(H,10);
+lines=houghlines(I1,theta,rho,peaks);
+figure;
+subplot 221;
+imshow(I);
+title('原始图像');
+subplot 222;
+imshow(I1),hold on
+for i = 1:length(lines) 
+    xy = [lines(i).point1; lines(i).point2]; 
+    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','red');%画出线段 
+end
+title('sobel边缘检测的直线检测结果')
+[H2,theta2,rho2]=hough(I2);%计算二值图像的标准hough变换
+peaks2=houghpeaks(H2,10);
+lines2=houghlines(I2,theta2,rho2,peaks2);
+subplot 223;
+imshow(I2),hold on
+for j = 1:length(lines2) 
+    xy2 = [lines2(j).point1; lines2(j).point2]; 
+    plot(xy2(:,1),xy2(:,2),'LineWidth',2,'Color','green');%画出线段 
+end
+title('拉普拉斯边缘检测的直线检测结果')
+[H3,theta3,rho3]=hough(I3);%计算二值图像的标准hough变换
+peaks3=houghpeaks(H3,10);
+lines3=houghlines(I3,theta3,rho3,peaks3);
+subplot 224;
+imshow(I3),hold on
+for k = 1:length(lines3) 
+    xy3 = [lines3(k).point1; lines3(k).point2]; 
+    plot(xy3(:,1),xy3(:,2),'LineWidth',2,'Color','yellow');%画出线段 
+end
+title('canny算子边缘检测的直线检测结果')
+
+%比较不同hough变换参数对直线检测的影响
+%改变霍夫变换的半径值
+close all;clear all;clc;
+%I=imread('test1.bmp');
+%I=imread('test2.png');
+%I=imread('test3.jpg');
+%I=imread('test4.bmp');
+%I=imread('test5.png');
+I=imread('test6.jpg');
+I1=edge(I,'sobel');
+[H,theta,rho]=hough(I1,'rho',0.1);
+peaks=houghpeaks(H,10);
+lines=houghlines(I1,theta,rho,peaks);
+figure;
+subplot 221;
+imshow(I);
+title('原始图像');
+subplot 222;
+imshow(I1),hold on
+for i = 1:length(lines) 
+    xy = [lines(i).point1; lines(i).point2]; 
+    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','red');%画出线段 
+end
+title('hough变化的半径值为0.1时的直线检测结果')
+[H2,theta2,rho2]=hough(I1,'rho',0.5);
+peaks2=houghpeaks(H2,10);
+lines2=houghlines(I1,theta2,rho2,peaks2);
+subplot 223;
+imshow(I1),hold on
+for j = 1:length(lines2) 
+    xy2 = [lines2(j).point1; lines2(j).point2]; 
+    plot(xy2(:,1),xy2(:,2),'LineWidth',2,'Color','green');%画出线段 
+end
+title('hough变化的半径值为0.5时的直线检测结果')
+[H3,theta3,rho3]=hough(I1,'rho',1);
+peaks3=houghpeaks(H3,10);
+lines3=houghlines(I1,theta3,rho3,peaks3);
+subplot 224;
+imshow(I1),hold on
+for k = 1:length(lines3) 
+    xy3 = [lines3(k).point1; lines3(k).point2]; 
+    plot(xy3(:,1),xy3(:,2),'LineWidth',2,'Color','yellow');%画出线段 
+end
+title('hough变化的半径值为1时的直线检测结果')
+
+%改变霍夫变换的角度值
+close all;clear all;clc;
+I=imread('test1.bmp');
+%I=imread('test2.png');
+%I=imread('test3.jpg');
+%I=imread('test4.bmp');
+%I=imread('test5.png');
+%I=imread('test6.jpg');
+I1=edge(I,'sobel');
+[H,theta,rho]=hough(I1,'theta',-70:0.01:-40);
+peaks=houghpeaks(H,10);
+lines=houghlines(I1,theta,rho,peaks);
+figure;
+subplot 221;
+imshow(I);
+title('原始图像');
+subplot 222;
+imshow(I1),hold on
+for i = 1:length(lines) 
+    xy = [lines(i).point1; lines(i).point2]; 
+    plot(xy(:,1),xy(:,2),'LineWidth',2,'Color','red');%画出线段 
+end
+title('hough变化的角度值为-70到-40度时的直线检测结果')
+[H2,theta2,rho2]=hough(I1,'theta',-30:0.01:0);
+peaks2=houghpeaks(H2,10);
+lines2=houghlines(I1,theta2,rho2,peaks2);
+subplot 223;
+imshow(I1),hold on
+for j = 1:length(lines2) 
+    xy2 = [lines2(j).point1; lines2(j).point2]; 
+    plot(xy2(:,1),xy2(:,2),'LineWidth',2,'Color','green');%画出线段 
+end
+title('hough变化的角度值为-30到0度时的直线检测结果')
+[H3,theta3,rho3]=hough(I1,'theta',0:0.01:30);
+peaks3=houghpeaks(H3,10);
+lines3=houghlines(I1,theta3,rho3,peaks3);
+subplot 224;
+imshow(I1),hold on
+for k = 1:length(lines3) 
+    xy3 = [lines3(k).point1; lines3(k).point2]; 
+    plot(xy3(:,1),xy3(:,2),'LineWidth',2,'Color','yellow');%画出线段 
+end
+title('hough变化的角度值为0到30度时的直线检测结果')
